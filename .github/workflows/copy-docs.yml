@@ -33,6 +33,15 @@ jobs:
         run: |
           python scripts/copy_docs.py
 
+      # デバックを仕込む
+      - name: Debug (check files)
+        run: |
+          echo "=== SOURCE (開発側) ==="
+          find Docs/Docs1 -type || true
+
+          echo "=== DEST (公開側) ==="
+          find project-docs1_repo || true
+
       # 変更がある場合のみcommit & push
       - name: Commit & Push changes
         run: |
