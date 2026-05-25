@@ -1,0 +1,58 @@
+name: Sync Docs to Project-docs1 Repo
+
+on:
+  push:
+    paths:
+      - "Docs/Docs1/**"
+    branches:
+      - main
+
+jobs:
+  sync-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up date variable
+        id: date
+        run: echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
+
+      - name: Clone public repository
+        run: |
+          git clone https://github.com/hanihatena35-prog/project-docs1.git project-docs1_repo
+          ls -R project-docs1_repo
+
+      - name: Copy docs with backup if exists
+        run: |
+          SRC_DIR="Docs/Docs1"
+          DEST_DIR="project-docs1_repo/docs"
+          DATE=${{ steps.date.outputs.date }}
+
+          mkdir -p "$DEST_DIR"
+
+          for file in $(find "$SRC_DIR" -type f); do
+            filename=$(basename "$file")
+            dest_file="$DEST_DIR/$filename"
+
+            # 既存ファイルがある場合はリネームして退避
+            if [ -f "$dest_file" ]; then
+              mv "$dest_file" "${dest_file%.*}_$DATE.${dest_file##*.}"
+            fi
+
+            # 新しいファイルをコピー
+            cp "$file" "$DEST_DIR/"
+          done
+
+      - name: Commit & Push changes
+        run: |
+          cd project-docs1_repo
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add .
+          git commit -m "Sync Docs from Dev Repo on $(date)"
+          git push
