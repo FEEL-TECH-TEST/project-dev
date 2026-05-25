@@ -6,6 +6,7 @@ on:
       - "Docs/Docs1/**"
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   sync-docs:
