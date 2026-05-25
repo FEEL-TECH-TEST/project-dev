@@ -13,47 +13,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 開発リポジトリを取得
       - name: Checkout source repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Set up date variable
-        id: date
-        run: echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
-
+      # 公開リポジトリをクローン
       - name: Clone public repository
         run: |
-          git clone https://github.com/hanihatena35-prog/project-docs1.git project-docs1_repo
-          ls -R project-docs1_repo
-
-      - name: Copy docs with backup if exists
+          git clone https://x-access-token:${{ secrets.PAT }}@github.com/hanihatena35-prog/project-docs1.git project-docs1_repo
+      
+      # Python実行環境準備
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      
+      # Pythonスクリプト実行
+      - name: Run Python script
         run: |
-          SRC_DIR="Docs/Docs1"
-          DEST_DIR="project-docs1_repo/docs"
-          DATE=${{ steps.date.outputs.date }}
+          python scripts/copy_docs.py
 
-          mkdir -p "$DEST_DIR"
-
-          for file in $(find "$SRC_DIR" -type f); do
-            filename=$(basename "$file")
-            dest_file="$DEST_DIR/$filename"
-
-            # 既存ファイルがある場合はリネームして退避
-            if [ -f "$dest_file" ]; then
-              mv "$dest_file" "${dest_file%.*}_$DATE.${dest_file##*.}"
-            fi
-
-            # 新しいファイルをコピー
-            cp "$file" "$DEST_DIR/"
-          done
-
+      # 変更がある場合のみcommit & push
       - name: Commit & Push changes
         run: |
           cd project-docs1_repo
           git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
+          git config user.email "actions@github.com"
 
           git add .
-          git commit -m "Sync Docs from Dev Repo on $(date)"
-          git push
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Sync Docs from Dev Repo on $(date +%Y%m%d%H%M)"
+            git push
+          fi

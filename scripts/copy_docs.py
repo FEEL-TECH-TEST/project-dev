@@ -41,8 +41,8 @@ def copy_files():
             if os.path.exists(dest_file):
                 dest_file = generate_new_filename(dest_file)
 
-                shutil.copy2(src_file, dest_file)
-                print(f"Copied: {src_file} -> {dest_file}")
+            shutil.copy2(src_file, dest_file)
+            print(f"Copied: {src_file} -> {dest_file}")
 
 
 if __name__ == "__main__":
