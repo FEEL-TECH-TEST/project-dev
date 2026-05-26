@@ -2,7 +2,7 @@ import os
 import shutil
 from datetime import datetime
 
-SRC_DIR = "Docs/Docs1"
+SRC_DIR = "docs/docs1"
 DEST_DIR = "project-docs1_repo/docs"
 
 today= datetime.now().strftime("%Y%m%d")
