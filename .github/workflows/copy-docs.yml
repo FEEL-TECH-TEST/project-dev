@@ -4,21 +4,23 @@ on:
   push:
     paths:
       - "docs/docs1/**"
+      - "docs/docs2/**"
+      - "docs/docs3/**"
     branches:
       - main
   workflow_dispatch:
 
 jobs:
-  sync-docs:
+  sync-docs1:
     runs-on: ubuntu-latest
 
     steps:
-      # 開発リポジトリを取得
+      # 開発リポジトリ1を取得
       - name: Checkout source repository
         uses: actions/checkout@v4
 
-      # 公開リポジトリをクローン
-      - name: Clone public repository
+      # 公開リポジトリ1をクローン
+      - name: Clone project-docs1 repository
         run: |
           git clone https://x-access-token:${{ secrets.PAT }}@github.com/hanihatena35-prog/project-docs1.git project-docs1_repo
       
@@ -34,18 +36,116 @@ jobs:
           python scripts/copy_docs.py
 
       # デバックを仕込む
-      - name: Debug (check files)
-        run: |
-          echo "=== SOURCE (開発側) ==="
-          find docs/docs1 -type f || true
+      #- name: Debug (check files)
+      # run: |
+      #    echo "=== SOURCE (開発側) ==="
+      #    find docs/docs1 -type f || true
 
-          echo "=== DEST (公開側) ==="
-          find project-docs1_repo -type f || true
+      #    echo "=== DEST (公開側) ==="
+      #    find project-docs1_repo -type f || true
 
       # 変更がある場合のみcommit & push
       - name: Commit & Push changes
         run: |
           cd project-docs1_repo
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+
+          git add .
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Sync Docs from Dev Repo on $(date +%Y%m%d%H%M)"
+            git push
+          fi
+
+  sync-docs2:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 開発リポジトリ2を取得
+      - name: Checkout source repository
+        uses: actions/checkout@v4
+
+      # 公開リポジトリ2をクローン
+      - name: Clone project-docs2 repository
+        run: |
+          git clone https://x-access-token:${{ secrets.PAT }}@github.com/hanihatena35-prog/project-docs2.git project-docs2_repo
+      
+      # Python実行環境準備
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      
+      # Pythonスクリプト実行
+      - name: Run Python script
+        run: |
+          python scripts/copy_docs.py
+
+      # デバックを仕込む
+      #- name: Debug (check files)
+      # run: |
+      #    echo "=== SOURCE (開発側) ==="
+      #    find docs/docs2 -type f || true
+
+      #    echo "=== DEST (公開側) ==="
+      #    find project-docs2_repo -type f || true
+
+      # 変更がある場合のみcommit & push
+      - name: Commit & Push changes
+        run: |
+          cd project-docs2_repo
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+
+          git add .
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Sync Docs from Dev Repo on $(date +%Y%m%d%H%M)"
+            git push
+          fi
+
+  sync-docs3:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 開発リポジトリ3を取得
+      - name: Checkout source repository
+        uses: actions/checkout@v4
+
+      # 公開リポジトリ3をクローン
+      - name: Clone project-docs3 repository
+        run: |
+          git clone https://x-access-token:${{ secrets.PAT }}@github.com/hanihatena35-prog/project-docs3.git project-docs3_repo
+      
+      # Python実行環境準備
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      
+      # Pythonスクリプト実行
+      - name: Run Python script
+        run: |
+          python scripts/copy_docs.py
+
+      # デバックを仕込む
+      #- name: Debug (check files)
+      # run: |
+      #    echo "=== SOURCE (開発側) ==="
+      #    find docs/docs3 -type f || true
+
+      #    echo "=== DEST (公開側) ==="
+      #    find project-docs3_repo -type f || true
+
+      # 変更がある場合のみcommit & push
+      - name: Commit & Push changes
+        run: |
+          cd project-docs3_repo
           git config user.name "github-actions"
           git config user.email "actions@github.com"
 
