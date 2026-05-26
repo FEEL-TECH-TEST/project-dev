@@ -44,6 +44,13 @@ jobs:
       #    echo "=== DEST (公開側) ==="
       #    find project-docs1_repo -type f || true
 
+      # copy
+      - name: Copy project-docs
+        run: |
+          export SRC_DIR="docs/docs1"
+          export DEST_DIR="project-docs1_repo/docs"
+          python scripts/copy_docs.py
+
       # 変更がある場合のみcommit & push
       - name: Commit & Push changes
         run: |
@@ -93,6 +100,13 @@ jobs:
       #    echo "=== DEST (公開側) ==="
       #    find project-docs2_repo -type f || true
 
+     # copy
+      - name: Copy project-docs
+        run: |
+          export SRC_DIR="docs/docs2"
+          export DEST_DIR="project-docs2_repo/docs"
+          python scripts/copy_docs.py  
+
       # 変更がある場合のみcommit & push
       - name: Commit & Push changes
         run: |
@@ -141,6 +155,13 @@ jobs:
 
       #    echo "=== DEST (公開側) ==="
       #    find project-docs3_repo -type f || true
+
+     # copy
+      - name: Copy project-docs
+        run: |
+          export SRC_DIR="docs/docs3"
+          export DEST_DIR="project-docs3_repo/docs"
+          python scripts/copy_docs.py  
 
       # 変更がある場合のみcommit & push
       - name: Commit & Push changes
