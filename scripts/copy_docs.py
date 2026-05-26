@@ -2,8 +2,9 @@ import os
 import shutil
 from datetime import datetime
 
-SRC_DIR = "docs/docs1"
-DEST_DIR = "project-docs1_repo/docs"
+# 環境変数からソースディレクトリと宛先ディレクトリを取得
+SRC_DIR = os.environ.get("SRC_DIR")
+DEST_DIR = os.environ.get("DEST_DIR")
 
 today= datetime.now().strftime("%Y%m%d")
 
@@ -26,6 +27,9 @@ def generate_new_filename(dest_path):
 
 
 def copy_files():
+    if not SRC_DIR or not DEST_DIR:
+        raise ValueError("SRC_DIR と DEST_DIR を設定してください。")
+    
     ensure_dir(DEST_DIR)
 
     for root, _, files in os.walk(SRC_DIR):
