@@ -46,10 +46,10 @@ jobs:
 
       # copy
       - name: Copy project-docs
-        run: |
-          export SRC_DIR="docs/docs1"
-          export DEST_DIR="project-docs1_repo/docs"
-          python scripts/copy_docs.py
+        run: python scripts/copy_docs.py
+        env:
+          SRC_DIR: docs/docs1
+          DEST_DIR: project-docs1_repo/docs
 
       # 変更がある場合のみcommit & push
       - name: Commit & Push changes
