@@ -37,10 +37,10 @@ jobs:
       - name: Debug (check files)
         run: |
           echo "=== SOURCE (開発側) ==="
-          find Docs/Docs1 -type || true
+          find Docs/Docs1 -type f || true
 
           echo "=== DEST (公開側) ==="
-          find project-docs1_repo || true
+          find project-docs1_repo -type f || true
 
       # 変更がある場合のみcommit & push
       - name: Commit & Push changes
