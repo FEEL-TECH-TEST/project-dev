@@ -1,9 +1,9 @@
-name: Sync Docs to Project-docs1 Repo
+name: Sync docs to project-docs1 repo
 
 on:
   push:
     paths:
-      - "Docs/Docs1/**"
+      - "docs/docs1/**"
     branches:
       - main
   workflow_dispatch:
@@ -37,7 +37,7 @@ jobs:
       - name: Debug (check files)
         run: |
           echo "=== SOURCE (開発側) ==="
-          find Docs/Docs1 -type f || true
+          find docs/docs1 -type f || true
 
           echo "=== DEST (公開側) ==="
           find project-docs1_repo -type f || true
